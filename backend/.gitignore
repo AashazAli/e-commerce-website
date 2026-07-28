@@ -1,0 +1,28 @@
+# Node modules
+**/node_modules
+
+# Build output
+**/.next
+**/dist
+**/build
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment files
+**/.env
+**/.env.local
+
+# Prisma
+**/prisma/dev.db
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/settings.json
+
+# Coverage
+coverage/
