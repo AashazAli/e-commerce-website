@@ -1,4 +1,7 @@
+import { BaseService } from "../../core/services/base.service";
+
 import { ScooterModelRepository } from "./scootermodel.repository";
+
 import {
     CreateScooterModelDTO,
     UpdateScooterModelDTO
@@ -6,25 +9,13 @@ import {
 
 const repository = new ScooterModelRepository();
 
-export class ScooterModelService {
+export class ScooterModelService extends BaseService<
+    CreateScooterModelDTO,
+    UpdateScooterModelDTO
+>{
 
-    create(data: CreateScooterModelDTO) {
-        return repository.create(data);
+    constructor() {
+        super(repository);
     }
 
-    getAll() {
-        return repository.findAll();
-    }
-
-    getById(id: number) {
-        return repository.findById(id);
-    }
-
-    update(id: number, data: UpdateScooterModelDTO) {
-        return repository.update(id, data);
-    }
-
-    delete(id: number) {
-        return repository.delete(id);
-    }
 }

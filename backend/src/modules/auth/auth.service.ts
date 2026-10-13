@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { AppError } from "../../core/errors/AppError";
 
 import { AuthRepository } from "./auth.repository";
 
@@ -11,8 +12,12 @@ export class AuthService {
 
         const exists = await repository.findUserByEmail(data.email);
 
-        if (exists)
-            throw new Error("Email already exists");
+        if (exists) {
+            throw new AppError(
+                "Email already exists",
+                409
+            );
+}
 
         const password = await bcrypt.hash(data.password, 10);
 
@@ -29,8 +34,12 @@ export class AuthService {
 
     const user = await repository.findByEmail(email);
 
-    if (!user)
-        throw new Error("Invalid email or password");
+    if (!user) {
+    throw new AppError(
+        "Invalid email or password",
+        401
+    );
+}
 
     const valid = await bcrypt.compare(
         password,
@@ -38,7 +47,10 @@ export class AuthService {
     );
 
     if (!valid)
-        throw new Error("Invalid email or password");
+        throw new AppError(
+            "Invalid email or password",
+            401
+        );
 
     const token = jwt.sign(
 

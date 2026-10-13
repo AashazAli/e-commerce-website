@@ -1,27 +1,23 @@
+import { BaseService } from "../../core/services/base.service";
+
 import { CategoryRepository } from "./category.repository";
-import { CreateCategoryDTO, UpdateCategoryDTO } from "./category.dto";
+
+import {
+    CreateCategoryDTO,
+    UpdateCategoryDTO
+} from "./category.dto";
 
 const repository = new CategoryRepository();
 
-export class CategoryService {
+export class CategoryService extends BaseService<
+    CreateCategoryDTO,
+    UpdateCategoryDTO
+>{
 
-    create(data: CreateCategoryDTO) {
-        return repository.create(data);
+    constructor() {
+
+        super(repository);
+
     }
 
-    getAll() {
-        return repository.findAll();
-    }
-
-    getById(id: number) {
-        return repository.findById(id);
-    }
-
-    update(id: number, data: UpdateCategoryDTO) {
-        return repository.update(id, data);
-    }
-
-    delete(id: number) {
-        return repository.delete(id);
-    }
 }

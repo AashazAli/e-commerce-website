@@ -1,156 +1,81 @@
 import { Request, Response } from "express";
 
 import { ProductService } from "./product.service";
-
-import {
-    CreateProductDTO,
-    UpdateProductDTO
-} from "./product.dto";
+import { asyncHandler } from "../../core/utils/asyncHandler";
 
 const service = new ProductService();
 
 export class ProductController {
 
-    async create(req: Request, res: Response) {
+    // Create Product
+    create = asyncHandler(async (req: Request, res: Response) => {
 
-        try {
+        const product = await service.create(req.body);
 
-            const data: CreateProductDTO = req.body;
+        res.status(201).json({
+            success: true,
+            product
+        });
 
-            const product = await service.create(data);
+    });
 
-            return res.status(201).json({
-                success: true,
-                message: "Product created successfully",
-                data: product
-            });
 
-        } catch (error: any) {
+    // Get All Products
+    getAll = asyncHandler(async (req: Request, res: Response) => {
 
-            console.error(error);
+        const products = await service.getAll();
 
-            return res.status(400).json({
-                success: false,
-                message: error.message
-            });
+        res.json({
+            success: true,
+            products
+        });
 
-        }
+    });
 
-    }
 
-    async getAll(req: Request, res: Response) {
+    // Get Product By ID
+    getById = asyncHandler(async (req: Request, res: Response) => {
 
-        try {
+        const product = await service.getById(
+            Number(req.params.id)
+        );
 
-            const products = await service.getAll();
+        res.json({
+            success: true,
+            product
+        });
 
-            return res.status(200).json({
-                success: true,
-                count: products.length,
-                data: products
-            });
+    });
 
-        } catch (error: any) {
 
-            console.error(error);
+    // Update Product
+    update = asyncHandler(async (req: Request, res: Response) => {
 
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
+        const product = await service.update(
+            Number(req.params.id),
+            req.body
+        );
 
-        }
+        res.json({
+            success: true,
+            product
+        });
 
-    }
+    });
 
-    async getById(req: Request, res: Response) {
 
-        try {
+    // Delete Product
+    delete = asyncHandler(async (req: Request, res: Response) => {
 
-            const id = Number(req.params.id);
+        await service.delete(
+            Number(req.params.id)
+        );
 
-            const product = await service.getById(id);
+        res.json({
+            success: true,
+            message: "Product deleted"
+        });
 
-            if (!product) {
-
-                return res.status(404).json({
-                    success: false,
-                    message: "Product not found"
-                });
-
-            }
-
-            return res.status(200).json({
-                success: true,
-                data: product
-            });
-
-        } catch (error: any) {
-
-            console.error(error);
-
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
-
-    async update(req: Request, res: Response) {
-
-        try {
-
-            const id = Number(req.params.id);
-
-            const data: UpdateProductDTO = req.body;
-
-            const product = await service.update(id, data);
-
-            return res.status(200).json({
-                success: true,
-                message: "Product updated successfully",
-                data: product
-            });
-
-        } catch (error: any) {
-
-            console.error(error);
-
-            return res.status(400).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
-
-    async delete(req: Request, res: Response) {
-
-        try {
-
-            const id = Number(req.params.id);
-
-            await service.delete(id);
-
-            return res.status(200).json({
-                success: true,
-                message: "Product deleted successfully"
-            });
-
-        } catch (error: any) {
-
-            console.error(error);
-
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
+    });
 
 }

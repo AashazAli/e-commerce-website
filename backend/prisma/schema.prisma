@@ -49,7 +49,7 @@ model User {
 
   addresses Address[]
   cart      Cart?
-  wishlist  Wishlist?
+  wishlist  Wishlist[]
   orders    Order[]
   bookings  ServiceBooking[]
   reviews   Review[]
@@ -180,7 +180,7 @@ model Product {
   compatibilities Compatibility[]
   inventory       Inventory?
   cartItems       CartItem[]
-  wishlistItems   WishlistItem[]
+  wishlists Wishlist[]
   orderItems      OrderItem[]
   reviews         Review[]
 
@@ -329,30 +329,26 @@ model CartItem {
 }
 
 model Wishlist {
+
   id Int @id @default(autoincrement())
 
-  userId Int @unique
+  userId Int
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  items WishlistItem[]
-}
-
-model WishlistItem {
-  id Int @id @default(autoincrement())
-
-  wishlistId Int
-
-  wishlist Wishlist @relation(fields: [wishlistId], references: [id], onDelete: Cascade)
-
   productId Int
 
-  product Product @relation(fields: [productId], references: [id])
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@unique([wishlistId, productId])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+
+  @@index([userId])
+
   @@index([productId])
-}
 
+}
 model Order {
   id Int @id @default(autoincrement())
 

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 
 import { ScooterModelService } from "./scootermodel.service";
+import { asyncHandler } from "../../core/utils/asyncHandler";
 
 import {
     createScooterModelSchema,
@@ -11,135 +12,62 @@ const service = new ScooterModelService();
 
 export class ScooterModelController {
 
-    async create(req: Request, res: Response) {
-
-        try {
-
-            const data = createScooterModelSchema.parse(req.body);
-
-            const scooterModel = await service.create(data);
-
-            return res.status(201).json({
+    create = asyncHandler(async (req: Request, res: Response) => {
+    
+            const brand = await service.create(req.body);
+    
+            res.status(201).json({
                 success: true,
-                message: "Scooter model created successfully",
-                scooterModel
+                brand
             });
-
-        } catch (error: any) {
-
-            return res.status(400).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
-
-    async getAll(req: Request, res: Response) {
-
-        try {
-
-            const scooterModels = await service.getAll();
-
-            return res.status(200).json({
+    
+        });
+    
+        getAll = asyncHandler(async (req: Request, res: Response) => {
+    
+            const brands = await service.getAll();
+    
+            res.json({
                 success: true,
-                scooterModels
+                brands
             });
-
-        } catch (error: any) {
-
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
-
-    async getById(req: Request, res: Response) {
-
-        try {
-
-            const id = Number(req.params.id);
-
-            const scooterModel = await service.getById(id);
-
-            if (!scooterModel) {
-
-                return res.status(404).json({
-                    success: false,
-                    message: "Scooter model not found"
-                });
-
-            }
-
-            return res.status(200).json({
+    
+        });
+    
+        getById = asyncHandler(async (req: Request, res: Response) => {
+    
+            const brand = await service.getById(Number(req.params.id));
+    
+            res.json({
                 success: true,
-                scooterModel
+                brand
             });
-
-        } catch (error: any) {
-
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
-
-    async update(req: Request, res: Response) {
-
-        try {
-
-            const id = Number(req.params.id);
-
-            const data = updateScooterModelSchema.parse(req.body);
-
-            const scooterModel = await service.update(id, data);
-
-            return res.status(200).json({
+    
+        });
+    
+        update = asyncHandler(async (req: Request, res: Response) => {
+    
+            const brand = await service.update(
+                Number(req.params.id),
+                req.body
+            );
+    
+            res.json({
                 success: true,
-                message: "Scooter model updated successfully",
-                scooterModel
+                brand
             });
-
-        } catch (error: any) {
-
-            return res.status(400).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
-    }
-
-    async delete(req: Request, res: Response) {
-
-        try {
-
-            const id = Number(req.params.id);
-
-            await service.delete(id);
-
-            return res.status(200).json({
+    
+        });
+    
+        delete = asyncHandler(async (req: Request, res: Response) => {
+    
+            await service.delete(Number(req.params.id));
+    
+            res.json({
                 success: true,
-                message: "Scooter model deleted successfully"
+                message: "Brand deleted"
             });
-
-        } catch (error: any) {
-
-            return res.status(500).json({
-                success: false,
-                message: error.message
-            });
-
-        }
-
+    
+        });
+    
     }
-
-}

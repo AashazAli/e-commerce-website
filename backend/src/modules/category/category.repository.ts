@@ -1,44 +1,35 @@
 import { prisma } from "../../lib/prisma";
-import { CreateCategoryDTO, UpdateCategoryDTO } from "./category.dto";
 
-export class CategoryRepository {
+import { BaseRepository } from "../../core/repositories/base.repository";
 
-    create(data: CreateCategoryDTO) {
-        return prisma.category.create({
-            data
-        });
+import {
+    CreateCategoryDTO,
+    UpdateCategoryDTO
+} from "./category.dto";
+
+export class CategoryRepository extends BaseRepository<
+    CreateCategoryDTO,
+    UpdateCategoryDTO
+> {
+
+    constructor() {
+
+        super(prisma.category);
+
     }
 
-    findAll() {
+    async findAll() {
+
         return prisma.category.findMany({
+
             orderBy: {
+
                 name: "asc"
+
             }
+
         });
+
     }
 
-    findById(id: number) {
-        return prisma.category.findUnique({
-            where: {
-                id
-            }
-        });
-    }
-
-    update(id: number, data: UpdateCategoryDTO) {
-        return prisma.category.update({
-            where: {
-                id
-            },
-            data
-        });
-    }
-
-    delete(id: number) {
-        return prisma.category.delete({
-            where: {
-                id
-            }
-        });
-    }
 }

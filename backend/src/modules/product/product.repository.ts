@@ -1,33 +1,20 @@
 import { prisma } from "../../lib/prisma";
 
+import { BaseRepository } from "../../core/repositories/base.repository";
+
 import {
     CreateProductDTO,
     UpdateProductDTO
 } from "./product.dto";
 
-export class ProductRepository {
+export class ProductRepository extends BaseRepository<
+    CreateProductDTO,
+    UpdateProductDTO
+>{
 
-    async create(data: CreateProductDTO) {
+    constructor() {
 
-        return prisma.product.create({
-
-            data,
-
-            include: {
-
-                brand: true,
-
-                category: true,
-
-                scooterModel: true,
-
-                inventory: true,
-
-                images: true
-
-            }
-
-        });
+        super(prisma.product);
 
     }
 
@@ -41,11 +28,7 @@ export class ProductRepository {
 
                 category: true,
 
-                scooterModel: true,
-
-                inventory: true,
-
-                images: true
+                scooterModel: true
 
             },
 
@@ -61,89 +44,48 @@ export class ProductRepository {
 
     async findById(id: number) {
 
-        return prisma.product.findUnique({
+    return prisma.product.findUnique({
 
-            where: {
+        where: {
 
-                id
+            id
 
-            },
+        },
 
-            include: {
+        include: {
 
-                brand: true,
+            brand: true,
 
-                category: true,
+            category: true,
 
-                scooterModel: true,
+            scooterModel: true,
 
-                inventory: true,
+            images: {
 
-                images: true,
+                orderBy: {
 
-                specifications: true,
-
-                reviews: {
-
-                    include: {
-
-                        user: true
-
-                    }
+                    isPrimary: "desc"
 
                 }
 
-            }
+            },
 
-        });
+            specifications: {
 
-    }
+                orderBy: {
 
-    async update(
-        id: number,
-        data: UpdateProductDTO
-    ) {
+                    specKey: "asc"
 
-        return prisma.product.update({
-
-            where: {
-
-                id
+                }
 
             },
 
-            data,
+            inventory: true
 
-            include: {
+        }
 
-                brand: true,
+    });
 
-                category: true,
-
-                scooterModel: true,
-
-                inventory: true,
-
-                images: true
-
-            }
-
-        });
-
-    }
-
-    async delete(id: number) {
-
-        return prisma.product.delete({
-
-            where: {
-
-                id
-
-            }
-
-        });
-
-    }
+}
 
 }

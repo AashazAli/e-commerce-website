@@ -1,29 +1,42 @@
-import { ProductType } from "@prisma/client";
+import { z } from "zod";
 
-export interface CreateProductDTO {
-    name: string;
-    slug: string;
-    sku: string;
+export const createProductSchema = z.object({
 
-    description: string;
-    shortDescription?: string;
+    name: z.string().min(2),
 
-    price: number;
-    salePrice?: number;
+    slug: z.string().min(2),
 
-    stock: number;
+    sku: z.string().min(1),
 
-    thumbnail: string;
+    type: z.enum([
+        "SCOOTER",
+        "SPARE_PART",
+        "ACCESSORY"
+    ]),
 
-    type: ProductType;
+    description: z.string(),
 
-    brandId: number;
-    categoryId: number;
-    modelId?: number;
+    shortDescription: z.string().optional(),
 
-    isFeatured?: boolean;
-    isActive?: boolean;
-}
+    price: z.coerce.number(),
 
-export interface UpdateProductDTO
-    extends Partial<CreateProductDTO> {}
+    salePrice: z.coerce.number().optional(),
+
+    stock: z.coerce.number().int(),
+
+    thumbnail: z.string(),
+
+    isFeatured: z.boolean().optional(),
+
+    isActive: z.boolean().optional(),
+
+    brandId: z.coerce.number().int(),
+
+    categoryId: z.coerce.number().int(),
+
+    modelId: z.coerce.number().int().optional()
+
+});
+
+export const updateProductSchema =
+    createProductSchema.partial();

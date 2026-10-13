@@ -1,44 +1,22 @@
+import { BaseService } from "../../core/services/base.service";
+
+import { ProductRepository } from "./product.repository";
+
 import {
     CreateProductDTO,
     UpdateProductDTO
 } from "./product.dto";
 
-import { ProductRepository } from "./product.repository";
-
 const repository = new ProductRepository();
 
-export class ProductService {
+export class ProductService extends BaseService<
+    CreateProductDTO,
+    UpdateProductDTO
+>{
 
-    create(data: CreateProductDTO) {
+    constructor() {
 
-        return repository.create(data);
-
-    }
-
-    getAll() {
-
-        return repository.findAll();
-
-    }
-
-    getById(id: number) {
-
-        return repository.findById(id);
-
-    }
-
-    update(
-        id: number,
-        data: UpdateProductDTO
-    ) {
-
-        return repository.update(id, data);
-
-    }
-
-    delete(id: number) {
-
-        return repository.delete(id);
+        super(repository);
 
     }
 

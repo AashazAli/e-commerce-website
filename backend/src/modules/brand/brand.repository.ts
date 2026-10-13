@@ -1,54 +1,29 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "../../lib/prisma";
 
-const prisma = new PrismaClient();
+import { BaseRepository } from "../../core/repositories/base.repository";
 
-export class BrandRepository {
+import {
+    CreateBrandDTO,
+    UpdateBrandDTO
+} from "./brand.dto";
 
-    async create(data: any) {
+export class BrandRepository extends BaseRepository<
+    CreateBrandDTO,
+    UpdateBrandDTO
+> {
 
-        return prisma.brand.create({
-            data
-        });
-
+    constructor() {
+        super(prisma.brand);
     }
 
     async findAll() {
 
         return prisma.brand.findMany({
+
             orderBy: {
                 name: "asc"
             }
-        });
 
-    }
-
-    async findById(id: number) {
-
-        return prisma.brand.findUnique({
-            where: {
-                id
-            }
-        });
-
-    }
-
-    async update(id: number, data: any) {
-
-        return prisma.brand.update({
-            where: {
-                id
-            },
-            data
-        });
-
-    }
-
-    async delete(id: number) {
-
-        return prisma.brand.delete({
-            where: {
-                id
-            }
         });
 
     }

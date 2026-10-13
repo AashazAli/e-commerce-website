@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { CategoryService } from "./category.service";
+import { asyncHandler } from "../../core/utils/asyncHandler";
 import {
     createCategorySchema,
     updateCategorySchema
@@ -9,29 +10,18 @@ const service = new CategoryService();
 
 export class CategoryController {
 
-    async create(req: Request, res: Response) {
-        try {
+    create = asyncHandler(async (req: Request, res: Response) => {
 
-            const data = createCategorySchema.parse(req.body);
+        const category = await service.create(req.body);
 
-            const category = await service.create(data);
+        res.status(201).json({
+            success: true,
+            category
+        });
 
-            res.status(201).json({
-                success: true,
-                category
-            });
+    });
 
-        } catch (err: any) {
-
-            res.status(400).json({
-                success: false,
-                message: err.message
-            });
-
-        }
-    }
-
-    async getAll(req: Request, res: Response) {
+    getAll = asyncHandler(async (req: Request, res: Response) => {
 
         const categories = await service.getAll();
 
@@ -40,55 +30,46 @@ export class CategoryController {
             categories
         });
 
-    }
+    });
 
-    async getById(req: Request, res: Response) {
+    getById = asyncHandler(async (req: Request, res: Response) => {
 
-        const category = await service.getById(Number(req.params.id));
+        const category = await service.getById(
+            Number(req.params.id)
+        );
 
         res.json({
             success: true,
             category
         });
 
-    }
+    });
 
-    async update(req: Request, res: Response) {
+    update = asyncHandler(async (req: Request, res: Response) => {
 
-        try {
+        const category = await service.update(
+            Number(req.params.id),
+            req.body
+        );
 
-            const data = updateCategorySchema.parse(req.body);
+        res.json({
+            success: true,
+            category
+        });
 
-            const category = await service.update(
-                Number(req.params.id),
-                data
-            );
+    });
 
-            res.json({
-                success: true,
-                category
-            });
+    delete = asyncHandler(async (req: Request, res: Response) => {
 
-        } catch (err: any) {
-
-            res.status(400).json({
-                success: false,
-                message: err.message
-            });
-
-        }
-
-    }
-
-    async delete(req: Request, res: Response) {
-
-        await service.delete(Number(req.params.id));
+        await service.delete(
+            Number(req.params.id)
+        );
 
         res.json({
             success: true,
             message: "Category deleted"
         });
 
-    }
+    });
 
 }

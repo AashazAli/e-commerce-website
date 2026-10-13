@@ -1,31 +1,21 @@
+import { BaseService } from "../../core/services/base.service";
+
 import { BrandRepository } from "./brand.repository";
+
+import {
+    CreateBrandDTO,
+    UpdateBrandDTO
+} from "./brand.dto";
 
 const repository = new BrandRepository();
 
-export class BrandService {
+export class BrandService extends BaseService<
+    CreateBrandDTO,
+    UpdateBrandDTO
+> {
 
-    async create(data: any) {
-
-        return repository.create(data);
-
-    }
-
-    async getAll() {
-
-        return repository.findAll();
-
-    }
-
-    async update(id: number, data: any) {
-
-        return repository.update(id, data);
-
-    }
-
-    async delete(id: number) {
-
-        return repository.delete(id);
-
+    constructor() {
+        super(repository);
     }
 
 }

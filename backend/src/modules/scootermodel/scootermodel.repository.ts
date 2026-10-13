@@ -1,47 +1,55 @@
 import { prisma } from "../../lib/prisma";
+
+import { BaseRepository } from "../../core/repositories/base.repository";
+
 import {
     CreateScooterModelDTO,
     UpdateScooterModelDTO
 } from "./scootermodel.dto";
 
-export class ScooterModelRepository {
+export class ScooterModelRepository extends BaseRepository<
+    CreateScooterModelDTO,
+    UpdateScooterModelDTO
+>{
 
-    create(data: CreateScooterModelDTO) {
-        return prisma.scooterModel.create({
-            data
-        });
+    constructor() {
+        super(prisma.scooterModel);
     }
 
-    findAll() {
+    async findAll() {
+
         return prisma.scooterModel.findMany({
+
             include: {
+
                 brand: true
+
             },
+
             orderBy: {
+
                 name: "asc"
+
             }
+
         });
+
     }
 
-    findById(id: number) {
+    async findById(id: number) {
+
         return prisma.scooterModel.findUnique({
+
             where: { id },
+
             include: {
+
                 brand: true
+
             }
+
         });
+
     }
 
-    update(id: number, data: UpdateScooterModelDTO) {
-        return prisma.scooterModel.update({
-            where: { id },
-            data
-        });
-    }
-
-    delete(id: number) {
-        return prisma.scooterModel.delete({
-            where: { id }
-        });
-    }
 }
